@@ -51,3 +51,7 @@ repoCont = content(repository)
 dataFrame = jsonlite::fromJSON(jsonlite::toJSON(dataCont))
 dataFrame$followers
 dataFrame$public_repos
+followerFrame$login         
+length(followerFrame$login) #Num followers (again)
+repoFrame$name              #Repo names
+repoFrame$created_at        #Date repo created
