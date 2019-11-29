@@ -190,4 +190,13 @@ plotLang
 
 #Sends graph to plotly
 api_create(plotLang, filename = "10 Most Popular Languages")
+
+#PlotRepo graphs repository watchers vs repo creation date.
+
+plotRepo = plot_ly(data = repoFrame, x = repoFrame$created_at, y = repoFrame$watchers_count, text = ~paste("Created at: ", repoFrame$created_at, "<br>Repositories: ", repoFrame$id), color = repoFrame$created_at, type = 'scatter')
+plotRepo
+# we can see Lerche had a big hit in his very first repository and a peak repo created circa summer 2015 with nearly 250 watchers, with some significantly sized followings in between
+
+#Sends graph to plotly
+api_create(plotRepo, filename = "Repository watchers vs time")
 #View on plotly for a better visualisation of the data: https://plot.ly/~daniel.dimascio/5/#/
