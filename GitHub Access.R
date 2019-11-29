@@ -92,3 +92,58 @@ length(followerFrame$login)
 repoFrame$name              #Repo names
 repoFrame$created_at        #Date repo created
 
+# List of usernames
+followerFrame$login        
+user_ids = c(followerFrame$login)
+
+# Create empty set
+users = c()
+usersDB = data.frame(username = integer(), following = integer(), followers = integer(), repos = integer(), dateCreated = integer())
+
+#Add users to list
+for(i in 1:length(user_ids))
+{
+  followURL = paste("https://api.github.com/users/", user_ids[i], "/following", sep = "")
+  followReq = GET(followURL, gtoken)
+  followCont = content(followReq)
+  
+  if(length(followCont) == 0)
+  {
+    next
+  }
+  
+  followDFrame = jsonlite::fromJSON(jsonlite::toJSON(followCont))
+  followLog = followDFrame$login
+  
+  #Loop through users
+  for (j in 1:length(followLog))
+  {
+    if (is.element(followLog[j], users) == FALSE)
+    {
+      users[length(users) + 1] = followLog[j] #Adds user to list
+      
+      followURL2 = paste("https://api.github.com/users/", followLog[j], sep = "")
+      following2 = GET(followURL2, gtoken)
+      followCont2 = content(following2)
+      followDFrame2 = jsonlite::fromJSON(jsonlite::toJSON(followCont2))
+      
+      
+      followingNumber = followDFrame2$following #following
+      followersNumber = followDFrame2$followers #followers
+      reposNumber = followDFrame2$public_repos  #Repo num
+      yearCreated = substr(followDFrame2$created_at, start = 1, stop = 4) #year joined
+
+      usersDB[nrow(usersDB) + 1, ] = c(followLog[j], followingNumber, followersNumber, reposNumber, yearCreated)
+    }
+    next
+  }
+  if(length(users) > 100) #stop after 100 entries
+  {
+    break
+  }
+  next
+}
+
+#Link to plotly
+Sys.setenv("plotly_username"="daniel.dimascio")
+Sys.setenv("plotly_api_key"="VYQoMmwkI5SYBNS6yNoM")
