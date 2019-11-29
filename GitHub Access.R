@@ -147,3 +147,49 @@ for(i in 1:length(user_ids))
 #Link to plotly
 Sys.setenv("plotly_username"="daniel.dimascio")
 Sys.setenv("plotly_api_key"="VYQoMmwkI5SYBNS6yNoM")
+
+#Below graphs the plot of Lerche's followers 10 most popular programming languages.
+languages = c()
+
+for (i in 1:length(users))
+{
+  reposURL = paste("https://api.github.com/users/", users[i], "/repos", sep = "")
+  repos = GET(reposURL, gtoken)
+  reposContent = content(repos)
+  reposDF = jsonlite::fromJSON(jsonlite::toJSON(reposContent))
+  reposNames = reposDF$name
+  
+  #Loop through all the repositories of an individual user
+  for (j in 1: length(reposNames))
+  {
+   
+    reposURL2 = paste("https://api.github.com/repos/", users[i], "/", reposNames[j], sep = "")
+    repos2 = GET(reposURL2, gtoken)
+    reposContent2 = content(repos2)
+    reposDF2 = jsonlite::fromJSON(jsonlite::toJSON(reposContent2))
+    language = reposDF2$language
+    
+    if (length(language) != 0 && language != "<NA>")
+    {
+      languages[length(languages)+1] = language
+    }
+    next
+  }
+  next
+}
+
+#Puts 10 most popular languages in table
+allLanguages = sort(table(languages), increasing=TRUE)
+top10Languages = allLanguages[(length(allLanguages)-9):length(allLanguages)]
+languageDF = as.data.frame(top10Languages)
+
+#PlotLang is a barchart.
+
+plotLang = plot_ly(data = languageDF, x = languageDF$languages, y = languageDF$Freq, type = "bar")
+plotLang
+
+Sys.setenv("plotly_username"="daniel.dimascio")
+Sys.setenv("plotly_api_key"="VYQoMmwkI5SYBNS6yNoM")
+#Sends graph to plotly
+api_create(plot3, filename = "10 Most Popular Languages")
+#View on plotly for a better visualisation of the data: https://plot.ly/~daniel.dimascio/5/#/
