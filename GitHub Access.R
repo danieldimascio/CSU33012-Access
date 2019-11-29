@@ -1,5 +1,5 @@
-install.packages("jsonlite")
 install.packages("plotly")
+install.packages("jsonlite")
 install.packages("httpuv")
 install.packages("httr")
 install.packages("ggplot2")
@@ -162,7 +162,7 @@ for (i in 1:length(users))
   #Loop through all the repositories of an individual user
   for (j in 1: length(reposNames))
   {
-   
+    
     reposURL2 = paste("https://api.github.com/repos/", users[i], "/", reposNames[j], sep = "")
     repos2 = GET(reposURL2, gtoken)
     reposContent2 = content(repos2)
@@ -188,8 +188,10 @@ languageDF = as.data.frame(top10Languages)
 plotLang = plot_ly(data = languageDF, x = languageDF$languages, y = languageDF$Freq, type = "bar")
 plotLang
 
+Sys.setenv("plotly_username"="daniel.dimascio")
+Sys.setenv("plotly_api_key"="VYQoMmwkI5SYBNS6yNoM")
 #Sends graph to plotly
-api_create(plotLang, filename = "10 Most Popular Languages")
+api_create(plot3, filename = "10 Most Popular Languages")
 
 #PlotRepo graphs repository watchers vs repo creation date.
 
@@ -199,6 +201,7 @@ plotRepo
 
 #Sends graph to plotly
 api_create(plotRepo, filename = "Repository watchers vs time")
+#Plot can be viewed on plotly for more interactive visualisation of the data: https://plot.ly/~berryd1/1/#/
 
 #PlotFvF graphs following vs followers by year.
 #
@@ -211,4 +214,6 @@ api_create(plotFvF, filename = "Following vs Followers")
 #We can gather from this graph that the majority of Lerche's followers have a similar number of follwers 
 #vs thier following, with some exceptions that have a large number of followers, and one interesting example 
 #who follows over 3k accounts.
+
+
 #View on plotly for a better visualisation of the data: https://plot.ly/~daniel.dimascio/5/#/
