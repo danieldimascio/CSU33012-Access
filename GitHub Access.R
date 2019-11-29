@@ -199,4 +199,16 @@ plotRepo
 
 #Sends graph to plotly
 api_create(plotRepo, filename = "Repository watchers vs time")
+
+#PlotFvF graphs following vs followers by year.
+#
+plotFvF = plot_ly(data = usersDB, x = usersDB$following, y = usersDB$followers, text = ~paste("Followers: ", followers, "<br>Following: ", following), color = ~dateCreated)
+plotFvF
+
+#Sends graph to plotly
+api_create(plotFvF, filename = "Following vs Followers")
+
+#We can gather from this graph that the majority of Lerche's followers have a similar number of follwers 
+#vs thier following, with some exceptions that have a large number of followers, and one interesting example 
+#who follows over 3k accounts.
 #View on plotly for a better visualisation of the data: https://plot.ly/~daniel.dimascio/5/#/
