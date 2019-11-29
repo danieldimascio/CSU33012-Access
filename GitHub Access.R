@@ -1,10 +1,16 @@
 install.packages("jsonlite")
+install.packages("plotly")
 install.packages("httpuv")
 install.packages("httr")
+install.packages("ggplot2")
+install.packages("devtools")
 
 library(jsonlite)
+library(plotly)
 library(httpuv)
 library(httr)
+library(ggplot2)
+library(devtools)
 
 #choose application
 oauth_endpoints("github") 
@@ -35,23 +41,54 @@ gitDF[gitDF$full_name == "jtleek/datasharing", "created_at"]
 # The code above was sourced from Michael Galarnyk's blog:
 # https://towardsdatascience.com/accessing-data-from-github-api-using-r-3633fb62cb08
 
-###
+
+##############
+
 
 #R will show the number of followers and public repositories I have in my GitHub a/c.
 
-#Preparing data for follower and repository info:
-allData = GET("https://api.github.com/users/danieldimascio", gtoken)
+#Preparing data for follower and repository info:                   // I have retroactively labelled all following 
+#                                                                   // data with 'M' to differentiate from the second part of the assignment
+MallData = GET("https://api.github.com/users/danieldimascio", gtoken)
+MdataCont = content(MallData)
+Mfollowers = GET("https://api.github.com/users/danieldimascio/followers", gtoken)
+MfollowCont = content(Mfollowers)
+Mrepository = GET("https://api.github.com/users/danieldimascio/repos", gtoken)
+MrepoCont = content(Mrepository)
+
+#Translate all into data frames:
+MdataFrame = jsonlite::fromJSON(jsonlite::toJSON(MdataCont))
+MfollowerFrame = jsonlite::fromJSON(jsonlite::toJSON(MfollowCont))
+MrepoFrame = jsonlite::fromJSON(jsonlite::toJSON(MrepoCont))
+
+#Information regarding the data:
+MdataFrame$followers         #Num followers
+MdataFrame$public_repos      #Num public repositories
+MfollowerFrame$login         #login names of followers
+Mlength(followerFrame$login) 
+MrepoFrame$name              #Repo names
+MrepoFrame$created_at        #Date repo created
+
+##Using the repository of Carl Lerche, an active R developer who is frequently trending on GitHub. He has 1.3k followers and
+##username: carllerche
+
+#Like last time, I will prepare the data before running it:
+allData = GET("https://api.github.com/users/carllerche", gtoken)
 dataCont = content(allData)
-followers = GET("https://api.github.com/users/danieldimascio/followers", gtoken)
+followers = GET("https://api.github.com/users/carllerche/followers?per_page=100", gtoken)
 followCont = content(followers)
-repository = GET("https://api.github.com/users/danieldimascio/repos", gtoken)
+repository = GET("https://api.github.com/users/carllerche/repos", gtoken)
 repoCont = content(repository)
 
-#Translate into data frame and display follower & public repo info:
 dataFrame = jsonlite::fromJSON(jsonlite::toJSON(dataCont))
+followerFrame = jsonlite::fromJSON(jsonlite::toJSON(followCont))
+repoFrame = jsonlite::fromJSON(jsonlite::toJSON(repoCont))
+ 
 dataFrame$followers         #Num followers
-dataFrame$public_repos      #Num public repos
-followerFrame$login         #Num follower logins
-length(followerFrame$login) #Num followers (again)
+dataFrame$public_repos      #Num public repositories
+dataFrame$login             #login name
+
+length(followerFrame$login)
 repoFrame$name              #Repo names
 repoFrame$created_at        #Date repo created
+
