@@ -189,5 +189,5 @@ plotLang = plot_ly(data = languageDF, x = languageDF$languages, y = languageDF$F
 plotLang
 
 #Sends graph to plotly
-api_create(plot3, filename = "10 Most Popular Languages")
+api_create(plotLang, filename = "10 Most Popular Languages")
 #View on plotly for a better visualisation of the data: https://plot.ly/~daniel.dimascio/5/#/
