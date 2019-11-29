@@ -188,8 +188,6 @@ languageDF = as.data.frame(top10Languages)
 plotLang = plot_ly(data = languageDF, x = languageDF$languages, y = languageDF$Freq, type = "bar")
 plotLang
 
-Sys.setenv("plotly_username"="daniel.dimascio")
-Sys.setenv("plotly_api_key"="VYQoMmwkI5SYBNS6yNoM")
 #Sends graph to plotly
 api_create(plot3, filename = "10 Most Popular Languages")
 #View on plotly for a better visualisation of the data: https://plot.ly/~daniel.dimascio/5/#/
